@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    linkerd.io/inject: enabled
+  name: curl-injected
+spec:
+  restartPolicy: Never
+  containers:
+  - image: alpine/curl
+    name: curl
+    command:
+      - curl
+    args:
+      - -v
+      - --proxy
+      - http://tinyproxy:8888
+      - https://google.com
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    linkerd.io/inject: disabled
+  name: curl
+spec:
+  restartPolicy: Never
+  containers:
+    - image: alpine/curl
+      name: curl
+      command:
+        - curl
+      args:
+        - -v
+        - --proxy
+        - http://tinyproxy:8888
+        - https://google.com
