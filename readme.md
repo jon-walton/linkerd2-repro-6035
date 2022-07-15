@@ -38,6 +38,11 @@ VM outside the Kubernetes cluster)
 Both run the same curl command requesting `https://google.com` via the tinyproxy service.
 The expected output is a 301 response, redirecting to `www.google.com`.
 
+## The fix
+
+in `tinyproxy/tinyproxy/src/reqs.c`, update `SSL_CONNECTION_RESPONSE` and change `HTTP/1.0` to `HTTP/1.1`.
+Rebuild the image, load it into the kind cluster and restart the tinyproxy deployment
+
 ### Linkerd Proxy injected
 
 Request fails with the following output:
