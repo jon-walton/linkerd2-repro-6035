@@ -17,10 +17,18 @@ App -> Linkerd Proxy -> HTTP Proxy -> Internet (HTTPS)
 
 ## Setup
 
-1. kind create cluster --config cluster.yaml
-2. kubectl apply -f linkerd.yaml
-3. kubectl apply -f tinyproxy.yaml
-4. kubectl apply -f workload.yaml
+For the setup, we build tinyproxy from source to resolve an issue where the correct HTTP version
+wasn't being returned. https://github.com/tinyproxy/tinyproxy/commit/a869e71ac382acb2a8b4442477ed675e5bf0ce76
+However, this only resolves the issue for HTTP requests, not HTTPS
+
+1. git submodule init
+2. git submodule update
+3. kind create cluster --config cluster.yaml
+4. docker build -t tinyproxy-src -f tinyproxy/tinyproxy.Dockerfile tinyproxy/
+5. kind load docker-image --name linkerd-6035 tinyproxy-src
+6. kubectl apply -f linkerd.yaml
+7. kubectl apply -f tinyproxy.yaml
+8. kubectl apply -f workload.yaml
 
 note: tinyproxy (http://tinyproxy.github.io/) is deliberately not injected with the linkerd proxy.
 This is to simulate it being outside the mesh (as is the situation in my case. The tinyproxy is a

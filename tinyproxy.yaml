@@ -21,7 +21,8 @@ spec:
         app: tinyproxy
     spec:
       containers:
-      - image: vimagick/tinyproxy
+      - image: tinyproxy-src
+        imagePullPolicy: Never
         name: tinyproxy
         resources: {}
         ports:
